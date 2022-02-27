@@ -1,9 +1,30 @@
-import { Box, ButtonBase } from "@mui/material";
+import { useState } from "react";
+import {
+  Box,
+  Paper,
+  ButtonBase,
+  IconButton,
+  BottomNavigation,
+  BottomNavigationAction as MuiBottomNavigationAction,
+  BottomNavigationActionProps as MuiBottomNavigationActionProps,
+} from "@mui/material";
+import ChangeHistoryOutlinedIcon from "@mui/icons-material/ChangeHistoryOutlined";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
+import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { styled } from "@mui/material/styles";
+import { useDevice } from "../hooks";
 import { palette } from "../theme";
 
 type NavSelectorProps = {
   show?: boolean;
+};
+
+type NavBarProps = {
+  value: string;
+  onChange: (val: string) => void;
 };
 
 const Root = styled(Box)(({ theme }) => ({
@@ -31,13 +52,33 @@ const NavSelector = styled("div")<NavSelectorProps>(
 );
 
 const navItems = [
-  { key: 1, color: palette.LILAC },
-  { key: 2, color: palette.DENIM_BLUE },
-  { key: 3, color: palette.INDIAN_RED },
-  { key: 4, color: palette.DARK_PASTEL_GREEN },
+  {
+    key: "customers",
+    color: palette.LILAC,
+    label: "Customers",
+    Icon: PersonOutlineIcon,
+  },
+  {
+    key: "communication",
+    color: palette.DENIM_BLUE,
+    label: "Communication",
+    Icon: MailOutlineIcon,
+  },
+  {
+    key: "ideas",
+    color: palette.INDIAN_RED,
+    label: "Ideas",
+    Icon: LightbulbOutlinedIcon,
+  },
+  {
+    key: "analytics",
+    color: palette.DARK_PASTEL_GREEN,
+    label: "Analytics",
+    Icon: PieChartOutlineOutlinedIcon,
+  },
 ];
 
-const NavBar = () => {
+const DesktopNavBar = ({ value, onChange }: NavBarProps) => {
   return (
     <Root
       display="flex"
@@ -45,20 +86,87 @@ const NavBar = () => {
       alignItems="center"
       justifyContent="space-between"
     >
-      <NavButton>Home</NavButton>
+      <NavButton>
+        <ChangeHistoryOutlinedIcon fontSize="large" />
+      </NavButton>
       <Box display="flex" flexDirection="column" alignItems="center" pr={3}>
-        {navItems.map(({ key, color }) => (
-          <Box display="flex" alignItems="center">
-            <NavSelector color={color} show={key === 1} />
-            <Box my={1} key={key} display="flex">
-              <NavButton color={color}>Button {key}</NavButton>
+        {navItems.map(({ key, color, Icon }) => (
+          <Box key={key} display="flex" alignItems="center">
+            <NavSelector color={color} show={key === value} />
+            <Box my={1} display="flex">
+              <NavButton color={color} onClick={() => onChange(key)}>
+                <Icon sx={{ color: palette.IRIDIUM }} fontSize="large" />
+              </NavButton>
             </Box>
           </Box>
         ))}
       </Box>
-      <NavButton>Setting</NavButton>
+      <IconButton size="large">
+        <SettingsOutlinedIcon
+          fontSize="inherit"
+          sx={{ color: palette.MERCURY }}
+        />
+      </IconButton>
     </Root>
   );
+};
+
+type BottomNavigationActionProps = {
+  selected?: boolean;
+  color?: string;
+} & MuiBottomNavigationActionProps;
+
+const BottomNavigationAction = styled(
+  MuiBottomNavigationAction
+)<BottomNavigationActionProps>(
+  ({ theme, selected, color = palette.MERCURY }) => ({
+    color: selected ? color : palette.MERCURY,
+    "& .MuiBottomNavigationAction-label": {},
+    "& .Mui-selected": {
+      color: selected ? color : palette.MERCURY,
+    },
+  })
+);
+
+const MobileNavBar = ({ value, onChange }: NavBarProps) => {
+  return (
+    <Paper
+      sx={{ position: "fixed", bottom: 0, minWidth: "100vw" }}
+      elevation={3}
+    >
+      <BottomNavigation
+        showLabels
+        value={value}
+        onChange={(e, val) => onChange(val)}
+        sx={{ backgroundColor: palette.IRIDIUM }}
+      >
+        {navItems.map(({ key, color, Icon, label }) => (
+          <BottomNavigationAction
+            key={key}
+            value={key}
+            label={label}
+            color={color}
+            icon={
+              <Icon sx={{ color: value === key ? color : palette.MERCURY }} />
+            }
+          />
+        ))}
+      </BottomNavigation>
+    </Paper>
+  );
+};
+
+const NavBar = () => {
+  const [value, setValue] = useState<string>("customers");
+  const { isMobile } = useDevice();
+
+  const handleChange = (newValue: string) => {
+    setValue(newValue);
+  };
+
+  const NavBarComponent = isMobile ? MobileNavBar : DesktopNavBar;
+
+  return <NavBarComponent value={value} onChange={handleChange} />;
 };
 
 export default NavBar;
