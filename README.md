@@ -5,5 +5,5 @@
 .env
 
 ```bash
-BASE_URL=http://api.artist-crm.ivan0313.tk/
+REACT_APP_BASE_URL=http://api.artist-crm.ivan0313.tk/
 ```
