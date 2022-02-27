@@ -6,9 +6,12 @@ interface Dimensions {
 }
 
 const useDevice = () => {
-  const [dimensions, setDimensions] = useState<Dimensions>();
+  const [dimensions, setDimensions] = useState<Dimensions>({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
 
-  const isMobile = (dimensions && dimensions?.width < 800) || false;
+  const isMobile = dimensions.width < 800;
 
   const isDesktop = !isMobile;
 
@@ -23,6 +26,7 @@ const useDevice = () => {
   };
 
   useEffect(() => {
+    resizeHandler();
     window.addEventListener("resize", resizeHandler);
     return () => {
       window.removeEventListener("resize", resizeHandler);
