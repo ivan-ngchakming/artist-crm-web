@@ -1,7 +1,7 @@
-import { Box } from "@mui/material";
+import { PageHeader } from "../components";
 
 const Analytics = () => {
-  return <Box m={4}>Analytics page placeholder</Box>;
+  return <PageHeader title="Analytics" />;
 };
 
 export default Analytics;

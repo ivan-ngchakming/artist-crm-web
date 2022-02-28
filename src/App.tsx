@@ -1,6 +1,6 @@
 import { CssBaseline, ThemeProvider, Box } from "@mui/material";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { NavBar } from "./components";
+import { NavBar, MetaTitle } from "./components";
 import {
   Analytics,
   Communications,
@@ -17,15 +17,18 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Box display="flex">
+          <MetaTitle />
           <NavBar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/customers" element={<Customers />} />
-            <Route path="/communications" element={<Communications />} />
-            <Route path="/ideas" element={<Ideas />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/settings" element={<Settings />} />
-          </Routes>
+          <Box width="100%">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/customers" element={<Customers />} />
+              <Route path="/communications" element={<Communications />} />
+              <Route path="/ideas" element={<Ideas />} />
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/settings" element={<Settings />} />
+            </Routes>
+          </Box>
         </Box>
       </ThemeProvider>
     </Router>
