@@ -1,7 +1,7 @@
-import { Box } from "@mui/material";
+import { PageHeader } from "../components";
 
 const Settings = () => {
-  return <Box m={4}>Settings page placeholder</Box>;
+  return <PageHeader title="Settings" />;
 };
 
 export default Settings;

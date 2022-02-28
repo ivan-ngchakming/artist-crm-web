@@ -4,9 +4,11 @@ import {
   Typography,
   IconButton,
   Button,
+  ButtonProps,
   Toolbar,
   Menu,
   MenuItem,
+  MenuItemProps,
   Divider,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -18,8 +20,17 @@ import { palette } from "../theme";
 import { NAV_ITEMS } from "../constants";
 import { useNavigate } from "react-router-dom";
 
+export type Action = {
+  label: string;
+  isPrimary: boolean;
+  ButtonProps?: ButtonProps;
+  MenuItemProps?: MenuItemProps & { onClick?: any };
+};
+
 type PageHeaderProps = {
-  title: string;
+  title?: string;
+  actions?: Action[];
+  primaryAction?: Action;
 };
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
@@ -27,23 +38,32 @@ const AppBar = styled(MuiAppBar)(({ theme }) => ({
   padding: theme.spacing(6, 9, 4, 6),
 }));
 
-const DesktopPageHeader = ({ title }: PageHeaderProps) => {
+const DesktopPageHeader = ({
+  title,
+  actions,
+  primaryAction,
+}: PageHeaderProps) => {
   return (
     <AppBar position="static" color="transparent" elevation={0}>
       <Toolbar sx={{ alignItems: "flex-end" }}>
         <Typography variant="h1" sx={{ flexGrow: 1 }}>
-          {title}
+          {title || "ArtistCRM"}
         </Typography>
-        <IconButton sx={{ mb: 1 }}>
-          <MoreHorizIcon />
-        </IconButton>
-        <Button
-          variant="outlined"
-          startIcon={<AddIcon />}
-          sx={{ ml: 4, mb: 1 }}
-        >
-          <Typography variant="h5">{title}</Typography>
-        </Button>
+        {actions && (
+          <IconButton sx={{ mb: 1 }}>
+            <MoreHorizIcon />
+          </IconButton>
+        )}
+        {primaryAction && (
+          <Button
+            variant="outlined"
+            startIcon={<AddIcon />}
+            sx={{ ml: 4, mb: 1 }}
+            {...primaryAction.ButtonProps}
+          >
+            <Typography variant="h5">{primaryAction.label}</Typography>
+          </Button>
+        )}
       </Toolbar>
     </AppBar>
   );
@@ -54,7 +74,11 @@ const MobileAppBar = styled(MuiAppBar)(({ theme }) => ({
   padding: theme.spacing(1, 1, 2, 1),
 }));
 
-const MobilePageHeader = ({ title }: PageHeaderProps) => {
+const MobilePageHeader = ({
+  title,
+  actions,
+  primaryAction,
+}: PageHeaderProps) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
@@ -72,11 +96,25 @@ const MobilePageHeader = ({ title }: PageHeaderProps) => {
     navigate(`/${key}`);
   };
 
+  const renderAction = ({ label, MenuItemProps }: Action) => {
+    return (
+      <MenuItem
+        {...MenuItemProps}
+        onClick={() => {
+          handleClose();
+          MenuItemProps?.onClick();
+        }}
+      >
+        {label}
+      </MenuItem>
+    );
+  };
+
   return (
     <MobileAppBar position="static" elevation={0}>
       <Toolbar sx={{ alignItems: "flex-end" }}>
         <Typography variant="h4" sx={{ flexGrow: 1 }}>
-          {title}
+          {title || "ArtistCRM"}
         </Typography>
 
         <IconButton
@@ -98,8 +136,10 @@ const MobilePageHeader = ({ title }: PageHeaderProps) => {
             "aria-labelledby": "mobile-menu-button",
           }}
         >
-          <MenuItem onClick={handleClose}>Create</MenuItem>
-          <Divider />
+          {primaryAction && renderAction(primaryAction)}
+          {actions && actions.map((action) => renderAction(action))}
+
+          {(!!primaryAction || !!actions) && <Divider />}
           <MenuItem onClick={() => handleMenuItemClick("")}>Home</MenuItem>
           {NAV_ITEMS.map(({ key, label }) => (
             <MenuItem key={key} onClick={() => handleMenuItemClick(key)}>

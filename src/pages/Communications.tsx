@@ -1,7 +1,7 @@
-import { Box } from "@mui/material";
+import { PageHeader } from "../components";
 
 const Communications = () => {
-  return <Box m={4}>Communications page placeholder</Box>;
+  return <PageHeader title="Communications" />;
 };
 
 export default Communications;
