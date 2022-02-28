@@ -1,6 +1,7 @@
 import { CssBaseline, ThemeProvider, Box } from "@mui/material";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import { NavBar, MetaTitle } from "./components";
+import { useDevice } from "./hooks";
 import {
   Analytics,
   Communications,
@@ -11,7 +12,16 @@ import {
 } from "./pages";
 import theme from "./theme";
 
-function App() {
+const contentMargins = {
+  mt: 6,
+  mr: 9,
+  mb: 4,
+  ml: 6,
+};
+
+const App = () => {
+  const { isDesktop } = useDevice();
+
   return (
     <Router>
       <ThemeProvider theme={theme}>
@@ -19,7 +29,7 @@ function App() {
         <Box display="flex">
           <MetaTitle />
           <NavBar />
-          <Box width="100%">
+          <Box width="100%" {...(isDesktop ? contentMargins : null)}>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/customers" element={<Customers />} />
@@ -33,6 +43,6 @@ function App() {
       </ThemeProvider>
     </Router>
   );
-}
+};
 
 export default App;
