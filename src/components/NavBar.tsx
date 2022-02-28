@@ -15,7 +15,7 @@ import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { styled } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useDevice } from "../hooks";
 import { palette } from "../theme";
 
@@ -172,7 +172,10 @@ const MobileNavBar = ({ value, onChange }: NavBarProps) => {
 };
 
 const NavBar = () => {
-  const [value, setValue] = useState<string>("customers");
+  const location = useLocation();
+  const [value, setValue] = useState<string>(
+    location.pathname.replace("/", "")
+  );
   const { isMobile } = useDevice();
 
   const handleChange = (newValue: string) => {
