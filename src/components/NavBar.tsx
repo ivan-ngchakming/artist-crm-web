@@ -15,11 +15,12 @@ import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { styled } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 import { useDevice } from "../hooks";
 import { palette } from "../theme";
 
 type NavSelectorProps = {
-  show?: boolean;
+  selected: boolean;
 };
 
 type NavBarProps = {
@@ -43,10 +44,10 @@ const NavButton = styled(ButtonBase)(({ theme, color }) => ({
 }));
 
 const NavSelector = styled("div")<NavSelectorProps>(
-  ({ theme, color, show }) => ({
+  ({ theme, color, selected }) => ({
     width: "32px",
     height: "0px",
-    border: show ? `2px solid ${color || palette.SILVER_CHALICE}` : "none",
+    border: selected ? `2px solid ${color || palette.SILVER_CHALICE}` : "none",
     transform: "rotate(90deg)",
   })
 );
@@ -59,7 +60,7 @@ const navItems = [
     Icon: PersonOutlineIcon,
   },
   {
-    key: "communication",
+    key: "communications",
     color: palette.DENIM_BLUE,
     label: "Communication",
     Icon: MailOutlineIcon,
@@ -79,6 +80,13 @@ const navItems = [
 ];
 
 const DesktopNavBar = ({ value, onChange }: NavBarProps) => {
+  const navigate = useNavigate();
+
+  const handleChange = (key: string) => {
+    onChange(key);
+    navigate(key);
+  };
+
   return (
     <Root
       display="flex"
@@ -86,22 +94,22 @@ const DesktopNavBar = ({ value, onChange }: NavBarProps) => {
       alignItems="center"
       justifyContent="space-between"
     >
-      <NavButton>
+      <NavButton onClick={() => handleChange("/")}>
         <ChangeHistoryOutlinedIcon fontSize="large" />
       </NavButton>
       <Box display="flex" flexDirection="column" alignItems="center" pr={3}>
         {navItems.map(({ key, color, Icon }) => (
           <Box key={key} display="flex" alignItems="center">
-            <NavSelector color={color} show={key === value} />
+            <NavSelector color={color} selected={key === value} />
             <Box my={1} display="flex">
-              <NavButton color={color} onClick={() => onChange(key)}>
+              <NavButton color={color} onClick={() => handleChange(key)}>
                 <Icon sx={{ color: palette.IRIDIUM }} fontSize="large" />
               </NavButton>
             </Box>
           </Box>
         ))}
       </Box>
-      <IconButton size="large">
+      <IconButton size="large" onClick={() => handleChange("/settings")}>
         <SettingsOutlinedIcon
           fontSize="inherit"
           sx={{ color: palette.MERCURY }}
@@ -129,6 +137,13 @@ const BottomNavigationAction = styled(
 );
 
 const MobileNavBar = ({ value, onChange }: NavBarProps) => {
+  const navigate = useNavigate();
+
+  const handleChange = (val: string) => {
+    onChange(val);
+    navigate(val);
+  };
+
   return (
     <Paper
       sx={{ position: "fixed", bottom: 0, minWidth: "100vw" }}
@@ -137,7 +152,7 @@ const MobileNavBar = ({ value, onChange }: NavBarProps) => {
       <BottomNavigation
         showLabels
         value={value}
-        onChange={(e, val) => onChange(val)}
+        onChange={(e, val) => handleChange(val)}
         sx={{ backgroundColor: palette.IRIDIUM }}
       >
         {navItems.map(({ key, color, Icon, label }) => (
