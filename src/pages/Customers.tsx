@@ -1,7 +1,13 @@
-import { Box } from "@mui/material";
+import {} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { PageHeader } from "../components";
 
 const Customers = () => {
-  return <Box m={4}>Customer page placeholder</Box>;
+  return (
+    <>
+      <PageHeader title="Customers" />
+    </>
+  );
 };
 
 export default Customers;

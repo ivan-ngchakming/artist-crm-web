@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Paper,
@@ -9,15 +9,12 @@ import {
   BottomNavigationActionProps as MuiBottomNavigationActionProps,
 } from "@mui/material";
 import ChangeHistoryOutlinedIcon from "@mui/icons-material/ChangeHistoryOutlined";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import MailOutlineIcon from "@mui/icons-material/MailOutline";
-import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
-import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { styled } from "@mui/material/styles";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDevice } from "../hooks";
 import { palette } from "../theme";
+import { NAV_ITEMS } from "../constants";
 
 type NavSelectorProps = {
   selected: boolean;
@@ -25,7 +22,6 @@ type NavSelectorProps = {
 
 type NavBarProps = {
   value: string;
-  onChange: (val: string) => void;
 };
 
 const Root = styled(Box)(({ theme }) => ({
@@ -52,38 +48,10 @@ const NavSelector = styled("div")<NavSelectorProps>(
   })
 );
 
-const navItems = [
-  {
-    key: "customers",
-    color: palette.LILAC,
-    label: "Customers",
-    Icon: PersonOutlineIcon,
-  },
-  {
-    key: "communications",
-    color: palette.DENIM_BLUE,
-    label: "Communication",
-    Icon: MailOutlineIcon,
-  },
-  {
-    key: "ideas",
-    color: palette.INDIAN_RED,
-    label: "Ideas",
-    Icon: LightbulbOutlinedIcon,
-  },
-  {
-    key: "analytics",
-    color: palette.DARK_PASTEL_GREEN,
-    label: "Analytics",
-    Icon: PieChartOutlineOutlinedIcon,
-  },
-];
-
-const DesktopNavBar = ({ value, onChange }: NavBarProps) => {
+const DesktopNavBar = ({ value }: NavBarProps) => {
   const navigate = useNavigate();
 
   const handleChange = (key: string) => {
-    onChange(key);
     navigate(key);
   };
 
@@ -98,7 +66,7 @@ const DesktopNavBar = ({ value, onChange }: NavBarProps) => {
         <ChangeHistoryOutlinedIcon fontSize="large" />
       </NavButton>
       <Box display="flex" flexDirection="column" alignItems="center" pr={3}>
-        {navItems.map(({ key, color, Icon }) => (
+        {NAV_ITEMS.map(({ key, color, Icon }) => (
           <Box key={key} display="flex" alignItems="center">
             <NavSelector color={color} selected={key === value} />
             <Box my={1} display="flex">
@@ -136,11 +104,10 @@ const BottomNavigationAction = styled(
   })
 );
 
-const MobileNavBar = ({ value, onChange }: NavBarProps) => {
+const MobileNavBar = ({ value }: NavBarProps) => {
   const navigate = useNavigate();
 
   const handleChange = (val: string) => {
-    onChange(val);
     navigate(val);
   };
 
@@ -155,7 +122,7 @@ const MobileNavBar = ({ value, onChange }: NavBarProps) => {
         onChange={(e, val) => handleChange(val)}
         sx={{ backgroundColor: palette.IRIDIUM }}
       >
-        {navItems.map(({ key, color, Icon, label }) => (
+        {NAV_ITEMS.map(({ key, color, Icon, label }) => (
           <BottomNavigationAction
             key={key}
             value={key}
@@ -178,13 +145,13 @@ const NavBar = () => {
   );
   const { isMobile } = useDevice();
 
-  const handleChange = (newValue: string) => {
-    setValue(newValue);
-  };
+  useEffect(() => {
+    setValue(location.pathname.replace("/", ""));
+  }, [location.pathname]);
 
   const NavBarComponent = isMobile ? MobileNavBar : DesktopNavBar;
 
-  return <NavBarComponent value={value} onChange={handleChange} />;
+  return <NavBarComponent value={value} />;
 };
 
 export default NavBar;
