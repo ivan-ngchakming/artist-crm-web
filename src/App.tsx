@@ -1,5 +1,5 @@
 import { CssBaseline, ThemeProvider, Box } from "@mui/material";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import { NavBar, MetaTitle } from "./components";
 import {
   Analytics,
