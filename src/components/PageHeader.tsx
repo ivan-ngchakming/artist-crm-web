@@ -102,7 +102,7 @@ const MobilePageHeader = ({
         {...MenuItemProps}
         onClick={() => {
           handleClose();
-          MenuItemProps?.onClick();
+          if (MenuItemProps?.onClick) MenuItemProps?.onClick();
         }}
       >
         {label}

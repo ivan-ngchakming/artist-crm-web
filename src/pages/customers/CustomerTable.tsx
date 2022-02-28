@@ -11,9 +11,11 @@ import {
   TableHead,
   TableRow,
   Checkbox,
+  styled,
 } from "@mui/material";
 import { palette } from "../../theme";
-import { styled } from "@mui/material";
+import { useDevice } from "../../hooks";
+import CustomersCardList from "./CustomersCardList";
 
 type TabsProps = {
   color: string;
@@ -43,7 +45,51 @@ const CUSTOMER_TYPE_COLOR = {
   [CUSTOMER_TYPE.COMPLETED]: palette.LIGHT_SLATE_BLUE,
 };
 
+/**
+ * TODO: Add props type
+ */
+const DesktopCustomersTable = ({ customers }: any) => {
+  return (
+    <TableContainer>
+      <Table aria-label="customers table" size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell>
+              <Checkbox />
+            </TableCell>
+            <TableCell align="left">ID</TableCell>
+            <TableCell align="left">Name</TableCell>
+            <TableCell align="left">Email</TableCell>
+            <TableCell align="left">Instagram</TableCell>
+            <TableCell align="left">Status</TableCell>
+            <TableCell align="left">Updated</TableCell>
+          </TableRow>
+        </TableHead>
+
+        <TableBody>
+          {customers.map((x: any) => (
+            <TableRow key={x}>
+              <TableCell>
+                <Checkbox />
+              </TableCell>
+              <TableCell align="left">{x}</TableCell>
+              <TableCell align="left">Ng Chak Ming, Ivan</TableCell>
+              <TableCell align="left">ivan.ng.chak.ming@gmail.com</TableCell>
+              <TableCell align="left">ivan0313_</TableCell>
+              <TableCell align="left">Active</TableCell>
+              <TableCell align="left">Feb 27, 2022</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+};
+
+const customers = [1, 2, 3, 4, 5, 6, 7];
+
 const CustomersTable = () => {
+  const { isDesktop } = useDevice();
   const [customerType, setCustomerType] = useState<CUSTOMER_TYPE>(
     CUSTOMER_TYPE.ALL
   );
@@ -69,41 +115,11 @@ const CustomersTable = () => {
       </Box>
 
       <Box mt={2}>
-        <TableContainer>
-          <Table aria-label="customers table" size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <Checkbox />
-                </TableCell>
-                <TableCell align="left">ID</TableCell>
-                <TableCell align="left">Name</TableCell>
-                <TableCell align="left">Email</TableCell>
-                <TableCell align="left">Instagram</TableCell>
-                <TableCell align="left">Status</TableCell>
-                <TableCell align="left">Updated</TableCell>
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {[1, 2, 3, 4, 5, 6, 7].map((x) => (
-                <TableRow key={x}>
-                  <TableCell>
-                    <Checkbox />
-                  </TableCell>
-                  <TableCell align="left">{x}</TableCell>
-                  <TableCell align="left">Ng Chak Ming, Ivan</TableCell>
-                  <TableCell align="left">
-                    ivan.ng.chak.ming@gmail.com
-                  </TableCell>
-                  <TableCell align="left">ivan0313_</TableCell>
-                  <TableCell align="left">Active</TableCell>
-                  <TableCell align="left">Feb 27, 2022</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        {isDesktop ? (
+          <DesktopCustomersTable customers={customers} />
+        ) : (
+          <CustomersCardList customers={customers} />
+        )}
       </Box>
     </Box>
   );
