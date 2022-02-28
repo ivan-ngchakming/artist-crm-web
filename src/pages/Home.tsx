@@ -1,7 +1,7 @@
-import { Box } from "@mui/material";
+import { PageHeader } from "../components";
 
 const Home = () => {
-  return <Box m={4}>Home page placeholder</Box>;
+  return <PageHeader />;
 };
 
 export default Home;

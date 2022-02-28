@@ -9,6 +9,35 @@ export const palette = {
   DARK_PASTEL_GREEN: "#48B15F",
   MERCURY: "#E5E5E5",
 };
-const theme = createTheme({});
+const theme = createTheme({
+  palette: {
+    mode: "light",
+    primary: {
+      main: "#393A3E",
+    },
+    secondary: {
+      main: "#2A8BC8",
+    },
+  },
+  typography: {
+    fontFamily: "Raleway",
+    h1: {
+      fontSize: 64,
+    },
+    h5: {
+      fontSize: 24,
+    },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        outlined: {
+          borderRadius: 32,
+          padding: "6px 32px",
+        },
+      },
+    },
+  },
+});
 
 export default theme;
