@@ -1,5 +1,7 @@
 # Artist CRM
 
+Front-end for https://github.com/ivan-ngchakming/artist-crm-api
+
 ## Project setup
 
 .env
