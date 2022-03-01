@@ -29,7 +29,7 @@ const Tabs = styled(MuiTabs)<TabsProps>(({ color }) => ({
 }));
 
 const CustomersTable = () => {
-  const [page, setPage] = useState(0);
+  const [page] = useState(0);
   const { isDesktop } = useDevice();
   const [customerType, setCustomerType] = useState<CUSTOMER_STATUS>(
     CUSTOMER_STATUS.ALL
