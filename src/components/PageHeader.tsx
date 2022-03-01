@@ -34,8 +34,8 @@ type PageHeaderProps = {
 };
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
-  width: `calc( 100% - ${theme.spacing(15)}px )`,
-  padding: theme.spacing(6, 9, 4, 6),
+  width: "100%",
+  paddingBottom: theme.spacing(1),
 }));
 
 const DesktopPageHeader = ({
@@ -45,7 +45,7 @@ const DesktopPageHeader = ({
 }: PageHeaderProps) => {
   return (
     <AppBar position="static" color="transparent" elevation={0}>
-      <Toolbar sx={{ alignItems: "flex-end" }}>
+      <Toolbar sx={{ alignItems: "flex-end", px: 0 }}>
         <Typography variant="h1" sx={{ flexGrow: 1 }}>
           {title || "ArtistCRM"}
         </Typography>
@@ -102,7 +102,7 @@ const MobilePageHeader = ({
         {...MenuItemProps}
         onClick={() => {
           handleClose();
-          MenuItemProps?.onClick();
+          if (MenuItemProps?.onClick) MenuItemProps?.onClick();
         }}
       >
         {label}

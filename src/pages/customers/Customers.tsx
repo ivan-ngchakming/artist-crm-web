@@ -1,6 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
-import { PageHeader } from "../components";
-import { Action } from "../components/PageHeader";
+import PageHeader, { Action } from "../../components/PageHeader";
+import CustomersTable from "./CustomerTable";
 
 const headerPrimaryAction = {
   label: "Create",
@@ -19,6 +19,8 @@ const Customers = () => {
         actions={headerActions}
         primaryAction={headerPrimaryAction}
       />
+
+      <CustomersTable />
     </>
   );
 };
