@@ -1,5 +1,23 @@
 import { palette } from "../theme";
 
+export type Paginated<T> = {
+  data: T[];
+  meta: {
+    itemsPerPage: number;
+    totalItems: number;
+    currentPage: number;
+    totalPages: number;
+    sortBy: string[][];
+  };
+  links: {
+    first?: string;
+    previous?: string;
+    current: string;
+    next?: string;
+    last?: string;
+  };
+};
+
 export type Address = {
   id: number;
   lineOne: string;
@@ -15,6 +33,8 @@ export type Customer = {
   email?: string;
   address?: Address;
   correspondenceAddress?: Address;
+  createdDate: Date;
+  updatedDate: Date;
 };
 
 export enum CUSTOMER_STATUS {

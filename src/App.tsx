@@ -32,18 +32,20 @@ const App = () => {
             <Box display="flex">
               <MetaTitle />
               <NavBar />
-              <Box
-                width="100%"
-                {...(isDesktop ? { mt: 6, mr: 9, mb: 4, ml: 6 } : null)}
-              >
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/customers" element={<Customers />} />
-                  <Route path="/communications" element={<Communications />} />
-                  <Route path="/ideas" element={<Ideas />} />
-                  <Route path="/analytics" element={<Analytics />} />
-                  <Route path="/settings" element={<Settings />} />
-                </Routes>
+              <Box width="100%" height="100vh" sx={{ overflowY: "auto" }}>
+                <Box {...(isDesktop ? { mt: 6, mr: 9, mb: 4, ml: 6 } : null)}>
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/customers" element={<Customers />} />
+                    <Route
+                      path="/communications"
+                      element={<Communications />}
+                    />
+                    <Route path="/ideas" element={<Ideas />} />
+                    <Route path="/analytics" element={<Analytics />} />
+                    <Route path="/settings" element={<Settings />} />
+                  </Routes>
+                </Box>
               </Box>
             </Box>
           </ThemeProvider>

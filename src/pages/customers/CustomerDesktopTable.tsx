@@ -8,6 +8,7 @@ import {
   Checkbox,
   styled,
 } from "@mui/material";
+import { format } from "date-fns";
 import { Customer } from "../../types";
 import { getCustomerFullName } from "../../utils";
 
@@ -35,7 +36,7 @@ const CustomersDesktopTable = ({ customers }: { customers: Customer[] }) => {
 
         <TableBody>
           {customers.map((customer) => {
-            const { id, email, instagram } = customer;
+            const { id, email, instagram, updatedDate } = customer;
             return (
               <TableRow key={id}>
                 <TableCell>
@@ -48,7 +49,9 @@ const CustomersDesktopTable = ({ customers }: { customers: Customer[] }) => {
                 <TableCell align="left">{email || "-"}</TableCell>
                 <TableCell align="left">{instagram || "-"}</TableCell>
                 <TableCell align="left">Active</TableCell>
-                <TableCell align="left">-</TableCell>
+                <TableCell align="left">
+                  {format(new Date(updatedDate), "dd/mm/yyyy h:mm")}
+                </TableCell>
               </TableRow>
             );
           })}

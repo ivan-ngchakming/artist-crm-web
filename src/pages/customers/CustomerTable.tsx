@@ -9,7 +9,12 @@ import {
 import { useQuery } from "react-query";
 import { useDevice } from "../../hooks";
 import { listCustomers } from "../../queries";
-import { Customer, CUSTOMER_STATUS, CUSTOMER_STATUS_COLOR } from "../../types";
+import {
+  Customer,
+  Paginated,
+  CUSTOMER_STATUS,
+  CUSTOMER_STATUS_COLOR,
+} from "../../types";
 import CustomersCardList from "./CustomersCardList";
 import CustomerDesktopTable from "./CustomerDesktopTable";
 
@@ -24,11 +29,15 @@ const Tabs = styled(MuiTabs)<TabsProps>(({ color }) => ({
 }));
 
 const CustomersTable = () => {
+  const [page, setPage] = useState(0);
   const { isDesktop } = useDevice();
   const [customerType, setCustomerType] = useState<CUSTOMER_STATUS>(
     CUSTOMER_STATUS.ALL
   );
-  const { data } = useQuery<Customer[]>("listCustomers", listCustomers);
+  const { data } = useQuery<Paginated<Customer>>(["listCustomers", page], () =>
+    listCustomers(page)
+  );
+  const customers = data?.data;
 
   const handleTabChange = (event: any, newValue: CUSTOMER_STATUS) => {
     setCustomerType(newValue);
@@ -50,12 +59,12 @@ const CustomersTable = () => {
         </Tabs>
       </Box>
 
-      {data && (
+      {customers && (
         <Box mt={2}>
           {isDesktop ? (
-            <CustomerDesktopTable customers={data} />
+            <CustomerDesktopTable customers={customers} />
           ) : (
-            <CustomersCardList customers={data} />
+            <CustomersCardList customers={customers} />
           )}
         </Box>
       )}
