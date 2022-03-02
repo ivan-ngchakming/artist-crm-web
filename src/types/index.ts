@@ -31,6 +31,7 @@ export type Customer = {
   preferredName?: string;
   instagram?: any;
   email?: string;
+  status: CUSTOMER_STATUS;
   address?: Address;
   correspondenceAddress?: Address;
   createdDate: Date;

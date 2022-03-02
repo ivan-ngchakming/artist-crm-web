@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Tabs as MuiTabs,
   TabsProps as MuiTabsProps,
@@ -6,9 +5,7 @@ import {
   Box,
   styled,
 } from "@mui/material";
-import { useQuery } from "react-query";
 import { useDevice } from "../../hooks";
-import { listCustomers } from "../../queries";
 import {
   Customer,
   Paginated,
@@ -28,30 +25,32 @@ const Tabs = styled(MuiTabs)<TabsProps>(({ color }) => ({
   },
 }));
 
-const CustomersTable = () => {
-  const [page] = useState(0);
+const CustomersTable = ({
+  data,
+  customerType,
+  onTabChange,
+  onPageChange,
+}: {
+  data?: Paginated<Customer>;
+  customerType: CUSTOMER_STATUS;
+  onTabChange: (event: any, newValue: CUSTOMER_STATUS) => void;
+  onPageChange: (event: any, page: number) => void;
+}) => {
   const { isDesktop } = useDevice();
-  const [customerType, setCustomerType] = useState<CUSTOMER_STATUS>(
-    CUSTOMER_STATUS.ALL
-  );
-  const { data } = useQuery<Paginated<Customer>>(["listCustomers", page], () =>
-    listCustomers(page)
-  );
+
   const customers = data?.data;
 
-  const handleTabChange = (event: any, newValue: CUSTOMER_STATUS) => {
-    setCustomerType(newValue);
-  };
+  const color = CUSTOMER_STATUS_COLOR[customerType];
 
   return (
-    <Box py={3}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+    <Box py={3} height="100%" display="flex" flexDirection="column">
+      <Box sx={{ borderBottom: 1, borderColor: "divider", flex: "0 1 auto" }}>
         <Tabs
           scrollButtons="auto"
           value={customerType}
-          onChange={handleTabChange}
+          onChange={onTabChange}
           aria-label="customer type tab"
-          color={CUSTOMER_STATUS_COLOR[customerType]}
+          color={color}
         >
           {Object.values(CUSTOMER_STATUS).map((type) => (
             <Tab key={type} value={type} label={type} disableRipple />
@@ -59,15 +58,32 @@ const CustomersTable = () => {
         </Tabs>
       </Box>
 
-      {customers && (
-        <Box mt={2}>
-          {isDesktop ? (
-            <CustomerDesktopTable customers={customers} />
-          ) : (
-            <CustomersCardList customers={customers} />
-          )}
-        </Box>
-      )}
+      <Box mt={2} sx={{ flex: "1 1 auto" }}>
+        {customers && isDesktop && (
+          <CustomerDesktopTable
+            customers={customers}
+            paginationProps={{
+              selectedColor: color,
+              count: data.meta.totalPages,
+              page: data.meta.currentPage,
+              onChange: onPageChange,
+            }}
+            color={CUSTOMER_STATUS_COLOR[customerType]}
+          />
+        )}
+        {customers && !isDesktop && (
+          <CustomersCardList
+            customers={customers}
+            paginationProps={{
+              selectedColor: color,
+              count: data.meta.totalPages,
+              page: data.meta.currentPage,
+              onChange: onPageChange,
+            }}
+            color={CUSTOMER_STATUS_COLOR[customerType]}
+          />
+        )}
+      </Box>
     </Box>
   );
 };
