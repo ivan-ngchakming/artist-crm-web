@@ -1,8 +1,7 @@
 import axios from "axios";
+import { serializeQueryStr } from "../utils";
 
-export const listCustomers = async (page: number) => {
-  const { data } = await axios.get(
-    `/customers?page=${page}&limit=10&sortBy=id:ASC`
-  );
+export const listCustomers = async (query: any) => {
+  const { data } = await axios.get(`/customers?${serializeQueryStr(query)}`);
   return data;
 };
