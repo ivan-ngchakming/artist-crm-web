@@ -2,6 +2,10 @@
 
 Front-end for https://github.com/ivan-ngchakming/artist-crm-api
 
+![customer-page-desktop](./docs/customer-page-desktop.png)
+
+![customer-mobile-desktop](./docs/customer-page-mobile.png)
+
 ## Project setup
 
 .env
