@@ -1,7 +1,11 @@
-import { PageHeader } from "../components";
+import { PageContainer, PageHeader } from "../components";
 
 const Analytics = () => {
-  return <PageHeader title="Analytics" />;
+  return (
+    <PageContainer>
+      <PageHeader title="Analytics" />
+    </PageContainer>
+  );
 };
 
 export default Analytics;

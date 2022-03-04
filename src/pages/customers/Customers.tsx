@@ -1,20 +1,18 @@
 import { useState, useEffect, useCallback } from "react";
 import AddIcon from "@mui/icons-material/Add";
-import { Box } from "@mui/material";
-import { useQuery, useQueryClient } from "react-query";
-import { listCustomers } from "../../queries";
+import { Box, LinearProgress } from "@mui/material";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  listCustomers,
+  deleteCustomer as deleteCustomerQuery,
+} from "../../queries";
 import { Customer, Paginated, CUSTOMER_STATUS } from "../../types";
-import PageHeader, { Action } from "../../components/PageHeader";
+import PageHeader from "../../components/PageHeader";
 import CustomersTable from "./CustomerTable";
-
-const headerPrimaryAction = {
-  label: "Create",
-  isPrimary: true,
-  ButtonProps: { startIcon: <AddIcon /> },
-  MenuItemProps: {},
-};
-
-const headerActions = [] as Action[];
+import { useDevice } from "../../hooks";
+import PageContainer from "../../components/PageContainer";
+import { palette } from "../../theme";
 
 const Customers = () => {
   const queryClient = useQueryClient();
@@ -24,6 +22,7 @@ const Customers = () => {
     [CUSTOMER_STATUS.ACTIVE]: 1,
     [CUSTOMER_STATUS.COMPLETED]: 1,
   });
+  const { isDesktop } = useDevice();
 
   const [customerType, setCustomerType] = useState<CUSTOMER_STATUS>(
     CUSTOMER_STATUS.ALL
@@ -42,10 +41,20 @@ const Customers = () => {
     [customerType, page]
   );
 
-  const { data } = useQuery<Paginated<Customer>>(
+  const { data, isFetching, refetch } = useQuery<Paginated<Customer>>(
     ["listCustomers", page, customerType],
     customerQueryFn,
     { keepPreviousData: true }
+  );
+
+  const { mutate: deleteCustomer } = useMutation(
+    ["deleteCustomer"],
+    deleteCustomerQuery,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("listCustomers");
+      },
+    }
   );
 
   const handleTabChange = (event: any, newValue: CUSTOMER_STATUS) => {
@@ -56,16 +65,33 @@ const Customers = () => {
     setPage((prev) => ({ ...prev, [customerType]: newPage }));
   };
 
+  const headerPrimaryAction = {
+    label: "Create",
+    isPrimary: true,
+    ButtonProps: { startIcon: <AddIcon /> },
+  };
+
+  const headerActions = [
+    {
+      label: "Refresh",
+      isPrimary: true,
+      ButtonProps: { startIcon: <RefreshIcon /> },
+      MenuItemProps: {
+        onClick: () => refetch(),
+      },
+    },
+  ];
+
   useEffect(() => {
     if (data?.links.next) {
       queryClient.prefetchQuery(
-        ["projects", page[customerType] + 1, customerType],
+        ["listCustomers", page[customerType] + 1, customerType],
         customerQueryFn
       );
     }
     Object.values(CUSTOMER_STATUS).forEach((type) => {
       queryClient.prefetchQuery(
-        ["projects", page[customerType], type],
+        ["listCustomers", page[customerType], type],
         customerQueryFn
       );
     });
@@ -79,23 +105,35 @@ const Customers = () => {
   }, [customerType, data, page]);
 
   return (
-    <Box display="flex" flexDirection="column" height="100%">
-      <Box sx={{ flex: "0 1 auto" }}>
-        <PageHeader
-          title="Customers"
-          actions={headerActions}
-          primaryAction={headerPrimaryAction}
+    <>
+      {isFetching && !!data ? (
+        <LinearProgress />
+      ) : (
+        <Box
+          height={4}
+          sx={{ backgroundColor: isDesktop ? undefined : palette.IRIDIUM }}
         />
-      </Box>
-      <Box sx={{ flex: "1 1 auto" }}>
-        <CustomersTable
-          data={data}
-          customerType={customerType}
-          onPageChange={handlePageChange}
-          onTabChange={handleTabChange}
-        />
-      </Box>
-    </Box>
+      )}
+
+      <PageContainer display="flex" flexDirection="column">
+        <Box sx={{ flex: "0 1 auto" }}>
+          <PageHeader
+            title="Customers"
+            actions={headerActions}
+            primaryAction={headerPrimaryAction}
+          />
+        </Box>
+        <Box sx={{ flex: "1 1 auto" }}>
+          <CustomersTable
+            data={data}
+            customerType={customerType}
+            onPageChange={handlePageChange}
+            onTabChange={handleTabChange}
+            onDelete={deleteCustomer}
+          />
+        </Box>
+      </PageContainer>
+    </>
   );
 };
 

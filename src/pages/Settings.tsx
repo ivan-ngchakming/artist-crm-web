@@ -1,7 +1,11 @@
-import { PageHeader } from "../components";
+import { PageContainer, PageHeader } from "../components";
 
 const Settings = () => {
-  return <PageHeader title="Settings" />;
+  return (
+    <PageContainer>
+      <PageHeader title="Settings" />
+    </PageContainer>
+  );
 };
 
 export default Settings;

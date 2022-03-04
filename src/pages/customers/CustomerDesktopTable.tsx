@@ -1,34 +1,69 @@
+import { useState } from "react";
 import {
   Table,
   TableBody,
   TableContainer,
   TableCell as MuiTableCell,
   TableHead,
-  TableRow,
+  TableRow as MuiTableRow,
+  TableRowProps as MuiTableRowProps,
   Checkbox,
+  Menu,
+  MenuItem,
   styled,
   Box,
   Typography,
+  IconButton,
 } from "@mui/material";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Customer } from "../../types";
 import { getCustomerFullName, formatDate } from "../../utils";
 import Pagination, { PaginationProps } from "./Pagination";
+
+type TableRowProps = MuiTableRowProps & { menuopened?: boolean };
 
 export type CusomterTableProps = {
   customers: Customer[];
   paginationProps: PaginationProps;
   color: string;
+  onDelete: (id: number) => void;
 };
 
 const TableCell = styled(MuiTableCell)({
   borderBottom: "none",
 });
 
+const TableRow = styled(MuiTableRow)<TableRowProps>(({ menuopened }) => ({
+  "& .MuiIconButton-root": {
+    display: menuopened ? "inline-flex" : "none",
+  },
+  "&:hover .MuiIconButton-root": {
+    display: "inline-flex",
+  },
+  borderRadius: 2,
+}));
+
 const CustomersDesktopTable = ({
   customers,
   paginationProps,
   color,
+  onDelete,
 }: CusomterTableProps) => {
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
+  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event?.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleDeleteCustomer = (id: number) => {
+    onDelete(id);
+    handleClose();
+  };
+
   return (
     <Box height="100%" display="flex" flexDirection="column">
       <TableContainer sx={{ flexGrow: 1 }}>
@@ -57,22 +92,57 @@ const CustomersDesktopTable = ({
             {customers.length > 0 ? (
               customers.map((customer) => {
                 const { id, email, instagram, status, updatedDate } = customer;
+                const open =
+                  !!anchorEl && anchorEl.id === `table-row-menu-button-${id}`;
+
                 return (
-                  <TableRow key={id}>
-                    <TableCell>
-                      <Checkbox />
-                    </TableCell>
-                    <TableCell align="left">{id}</TableCell>
-                    <TableCell align="left">
-                      {getCustomerFullName(customer) || "-"}
-                    </TableCell>
-                    <TableCell align="left">{email || "-"}</TableCell>
-                    <TableCell align="left">{instagram || "-"}</TableCell>
-                    <TableCell align="left">{status}</TableCell>
-                    <TableCell align="left">
-                      {formatDate(updatedDate)}
-                    </TableCell>
-                  </TableRow>
+                  <>
+                    <TableRow key={id} hover menuopened={open}>
+                      <TableCell>
+                        <Checkbox />
+                      </TableCell>
+                      <TableCell align="left">{id}</TableCell>
+                      <TableCell align="left">
+                        {getCustomerFullName(customer) || "-"}
+                      </TableCell>
+                      <TableCell align="left">{email || "-"}</TableCell>
+                      <TableCell align="left">{instagram || "-"}</TableCell>
+                      <TableCell align="left">{status}</TableCell>
+                      <TableCell align="left">
+                        {formatDate(updatedDate)}
+                      </TableCell>
+                      <TableCell sx={{ width: 56, px: 1 }}>
+                        <IconButton
+                          id={`table-row-menu-button-${id}`}
+                          aria-controls={
+                            open ? `table-row-menu-${id}` : undefined
+                          }
+                          aria-haspopup="true"
+                          aria-expanded={open ? "true" : undefined}
+                          disableRipple
+                          onClick={handleOpenMenu}
+                        >
+                          <MoreHorizIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                    <Menu
+                      id={`table-row-menu-${id}`}
+                      key={`table-row-menu-${id}`}
+                      anchorEl={anchorEl}
+                      open={open}
+                      onClose={handleClose}
+                      MenuListProps={{
+                        "aria-labelledby": "mobile-menu-button",
+                      }}
+                      transformOrigin={{ horizontal: "right", vertical: "top" }}
+                      anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                    >
+                      <MenuItem dense onClick={() => handleDeleteCustomer(id)}>
+                        Delete
+                      </MenuItem>
+                    </Menu>
+                  </>
                 );
               })
             ) : (

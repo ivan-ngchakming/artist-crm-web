@@ -1,7 +1,11 @@
-import { PageHeader } from "../components";
+import { PageContainer, PageHeader } from "../components";
 
 const Communications = () => {
-  return <PageHeader title="Communications" />;
+  return (
+    <PageContainer>
+      <PageHeader title="Communications" />
+    </PageContainer>
+  );
 };
 
 export default Communications;
