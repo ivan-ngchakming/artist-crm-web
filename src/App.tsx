@@ -4,7 +4,6 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { HelmetProvider } from "react-helmet-async";
 import axios from "axios";
 import { NavBar, MetaTitle } from "./components";
-import { useDevice } from "./hooks";
 import {
   Analytics,
   Communications,
@@ -21,8 +20,6 @@ axios.defaults.baseURL = BASE_URL;
 const queryClient = new QueryClient();
 
 const App = () => {
-  const { isDesktop } = useDevice();
-
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>

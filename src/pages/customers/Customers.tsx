@@ -3,12 +3,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { Box, LinearProgress } from "@mui/material";
 import { useQuery, useQueryClient } from "react-query";
 import { listCustomers } from "../../queries";
-import {
-  Customer,
-  Paginated,
-  CUSTOMER_STATUS,
-  CUSTOMER_STATUS_COLOR,
-} from "../../types";
+import { Customer, Paginated, CUSTOMER_STATUS } from "../../types";
 import PageHeader, { Action } from "../../components/PageHeader";
 import CustomersTable from "./CustomerTable";
 import { useDevice } from "../../hooks";
