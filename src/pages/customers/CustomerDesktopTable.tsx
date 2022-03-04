@@ -14,6 +14,12 @@ import { Customer } from "../../types";
 import { getCustomerFullName, formatDate } from "../../utils";
 import Pagination, { PaginationProps } from "./Pagination";
 
+export type CusomterTableProps = {
+  customers: Customer[];
+  paginationProps: PaginationProps;
+  color: string;
+};
+
 const TableCell = styled(MuiTableCell)({
   borderBottom: "none",
 });
@@ -22,11 +28,7 @@ const CustomersDesktopTable = ({
   customers,
   paginationProps,
   color,
-}: {
-  customers: Customer[];
-  paginationProps: PaginationProps;
-  color: string;
-}) => {
+}: CusomterTableProps) => {
   return (
     <Box height="100%" display="flex" flexDirection="column">
       <TableContainer sx={{ flexGrow: 1 }}>
