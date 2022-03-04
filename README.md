@@ -1,5 +1,7 @@
 # Artist CRM
 
+See Live: https://artist-crm.ivan0313.tk
+
 Front-end for https://github.com/ivan-ngchakming/artist-crm-api
 
 ![customer-page-desktop](./docs/customer-page-desktop.png)
