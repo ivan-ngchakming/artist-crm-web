@@ -87,6 +87,7 @@ const DesktopPageHeader = ({
                     handleClose();
                     if (MenuItemProps?.onClick) MenuItemProps?.onClick();
                   }}
+                  key={label}
                 >
                   {label}
                 </MenuItem>
