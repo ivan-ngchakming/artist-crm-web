@@ -43,6 +43,17 @@ const DesktopPageHeader = ({
   actions,
   primaryAction,
 }: PageHeaderProps) => {
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event?.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <AppBar position="static" color="transparent" elevation={0}>
       <Toolbar sx={{ alignItems: "flex-end", px: 0 }}>
@@ -50,10 +61,38 @@ const DesktopPageHeader = ({
           {title || "ArtistCRM"}
         </Typography>
         {actions && (
-          <IconButton sx={{ mb: 1 }}>
+          <IconButton sx={{ mb: 1 }} onClick={handleClick}>
             <MoreHorizIcon />
           </IconButton>
         )}
+        <Menu
+          id="mobile-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            "aria-labelledby": "mobile-menu-button",
+          }}
+          transformOrigin={{ horizontal: "right", vertical: "top" }}
+          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        >
+          {actions &&
+            actions.map((action) => {
+              const { label, MenuItemProps } = action;
+              return (
+                <MenuItem
+                  dense
+                  {...MenuItemProps}
+                  onClick={() => {
+                    handleClose();
+                    if (MenuItemProps?.onClick) MenuItemProps?.onClick();
+                  }}
+                >
+                  {label}
+                </MenuItem>
+              );
+            })}
+        </Menu>
         {primaryAction && (
           <Button
             variant="outlined"
@@ -99,6 +138,7 @@ const MobilePageHeader = ({
   const renderAction = ({ label, MenuItemProps }: Action) => {
     return (
       <MenuItem
+        key={label}
         {...MenuItemProps}
         onClick={() => {
           handleClose();

@@ -1,21 +1,18 @@
 import { useState, useEffect, useCallback } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { Box, LinearProgress } from "@mui/material";
-import { useQuery, useQueryClient } from "react-query";
-import { listCustomers } from "../../queries";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  listCustomers,
+  deleteCustomer as deleteCustomerQuery,
+} from "../../queries";
 import { Customer, Paginated, CUSTOMER_STATUS } from "../../types";
-import PageHeader, { Action } from "../../components/PageHeader";
+import PageHeader from "../../components/PageHeader";
 import CustomersTable from "./CustomerTable";
 import { useDevice } from "../../hooks";
-
-const headerPrimaryAction = {
-  label: "Create",
-  isPrimary: true,
-  ButtonProps: { startIcon: <AddIcon /> },
-  MenuItemProps: {},
-};
-
-const headerActions = [] as Action[];
+import PageContainer from "../../components/PageContainer";
+import { palette } from "../../theme";
 
 const Customers = () => {
   const queryClient = useQueryClient();
@@ -44,10 +41,20 @@ const Customers = () => {
     [customerType, page]
   );
 
-  const { data, isFetching } = useQuery<Paginated<Customer>>(
+  const { data, isFetching, refetch } = useQuery<Paginated<Customer>>(
     ["listCustomers", page, customerType],
     customerQueryFn,
     { keepPreviousData: true }
+  );
+
+  const { mutate: deleteCustomer } = useMutation(
+    ["deleteCustomer"],
+    deleteCustomerQuery,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("listCustomers");
+      },
+    }
   );
 
   const handleTabChange = (event: any, newValue: CUSTOMER_STATUS) => {
@@ -57,6 +64,23 @@ const Customers = () => {
   const handlePageChange = (event: any, newPage: number) => {
     setPage((prev) => ({ ...prev, [customerType]: newPage }));
   };
+
+  const headerPrimaryAction = {
+    label: "Create",
+    isPrimary: true,
+    ButtonProps: { startIcon: <AddIcon /> },
+  };
+
+  const headerActions = [
+    {
+      label: "Refresh",
+      isPrimary: true,
+      ButtonProps: { startIcon: <RefreshIcon /> },
+      MenuItemProps: {
+        onClick: () => refetch(),
+      },
+    },
+  ];
 
   useEffect(() => {
     if (data?.links.next) {
@@ -82,13 +106,16 @@ const Customers = () => {
 
   return (
     <>
-      {isFetching && !!data ? <LinearProgress /> : <Box height={4} />}
-      <Box
-        {...(isDesktop ? { mt: 6, mr: 9, mb: 4, ml: 6 } : null)}
-        height={`calc( 100% - 48px - 32px - 4px )`}
-        display="flex"
-        flexDirection="column"
-      >
+      {isFetching && !!data ? (
+        <LinearProgress />
+      ) : (
+        <Box
+          height={4}
+          sx={{ backgroundColor: isDesktop ? undefined : palette.IRIDIUM }}
+        />
+      )}
+
+      <PageContainer display="flex" flexDirection="column">
         <Box sx={{ flex: "0 1 auto" }}>
           <PageHeader
             title="Customers"
@@ -96,16 +123,16 @@ const Customers = () => {
             primaryAction={headerPrimaryAction}
           />
         </Box>
-
         <Box sx={{ flex: "1 1 auto" }}>
           <CustomersTable
             data={data}
             customerType={customerType}
             onPageChange={handlePageChange}
             onTabChange={handleTabChange}
+            onDelete={deleteCustomer}
           />
         </Box>
-      </Box>
+      </PageContainer>
     </>
   );
 };

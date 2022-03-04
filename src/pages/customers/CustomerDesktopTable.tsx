@@ -16,8 +16,6 @@ import {
   IconButton,
 } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { useMutation, useQueryClient } from "react-query";
-import { deleteCustomer as deleteCustomerQuery } from "../../queries";
 import { Customer } from "../../types";
 import { getCustomerFullName, formatDate } from "../../utils";
 import Pagination, { PaginationProps } from "./Pagination";
@@ -28,6 +26,7 @@ export type CusomterTableProps = {
   customers: Customer[];
   paginationProps: PaginationProps;
   color: string;
+  onDelete: (id: number) => void;
 };
 
 const TableCell = styled(MuiTableCell)({
@@ -41,14 +40,15 @@ const TableRow = styled(MuiTableRow)<TableRowProps>(({ menuopened }) => ({
   "&:hover .MuiIconButton-root": {
     display: "inline-flex",
   },
+  borderRadius: 2,
 }));
 
 const CustomersDesktopTable = ({
   customers,
   paginationProps,
   color,
+  onDelete,
 }: CusomterTableProps) => {
-  const queryClient = useQueryClient();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -59,18 +59,8 @@ const CustomersDesktopTable = ({
     setAnchorEl(null);
   };
 
-  const { mutate: deleteCustomer } = useMutation(
-    ["deleteCustomer"],
-    deleteCustomerQuery,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("listCustomers");
-      },
-    }
-  );
-
   const handleDeleteCustomer = (id: number) => {
-    deleteCustomer(id);
+    onDelete(id);
     handleClose();
   };
 

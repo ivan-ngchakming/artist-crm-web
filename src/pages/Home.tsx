@@ -1,7 +1,11 @@
-import { PageHeader } from "../components";
+import { PageHeader, PageContainer } from "../components";
 
 const Home = () => {
-  return <PageHeader />;
+  return (
+    <PageContainer>
+      <PageHeader />
+    </PageContainer>
+  );
 };
 
 export default Home;
