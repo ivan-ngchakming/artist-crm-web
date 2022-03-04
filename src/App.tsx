@@ -33,22 +33,14 @@ const App = () => {
               <MetaTitle />
               <NavBar />
               <Box width="100%" height="100vh" sx={{ overflowY: "auto" }}>
-                <Box
-                  {...(isDesktop ? { mt: 6, mr: 9, mb: 4, ml: 6 } : null)}
-                  height={`calc( 100% - 48px - 32px )`}
-                >
-                  <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/customers" element={<Customers />} />
-                    <Route
-                      path="/communications"
-                      element={<Communications />}
-                    />
-                    <Route path="/ideas" element={<Ideas />} />
-                    <Route path="/analytics" element={<Analytics />} />
-                    <Route path="/settings" element={<Settings />} />
-                  </Routes>
-                </Box>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/customers" element={<Customers />} />
+                  <Route path="/communications" element={<Communications />} />
+                  <Route path="/ideas" element={<Ideas />} />
+                  <Route path="/analytics" element={<Analytics />} />
+                  <Route path="/settings" element={<Settings />} />
+                </Routes>
               </Box>
             </Box>
           </ThemeProvider>

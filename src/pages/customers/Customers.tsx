@@ -1,11 +1,17 @@
 import { useState, useEffect, useCallback } from "react";
 import AddIcon from "@mui/icons-material/Add";
-import { Box } from "@mui/material";
+import { Box, LinearProgress } from "@mui/material";
 import { useQuery, useQueryClient } from "react-query";
 import { listCustomers } from "../../queries";
-import { Customer, Paginated, CUSTOMER_STATUS } from "../../types";
+import {
+  Customer,
+  Paginated,
+  CUSTOMER_STATUS,
+  CUSTOMER_STATUS_COLOR,
+} from "../../types";
 import PageHeader, { Action } from "../../components/PageHeader";
 import CustomersTable from "./CustomerTable";
+import { useDevice } from "../../hooks";
 
 const headerPrimaryAction = {
   label: "Create",
@@ -24,6 +30,7 @@ const Customers = () => {
     [CUSTOMER_STATUS.ACTIVE]: 1,
     [CUSTOMER_STATUS.COMPLETED]: 1,
   });
+  const { isDesktop } = useDevice();
 
   const [customerType, setCustomerType] = useState<CUSTOMER_STATUS>(
     CUSTOMER_STATUS.ALL
@@ -42,7 +49,7 @@ const Customers = () => {
     [customerType, page]
   );
 
-  const { data } = useQuery<Paginated<Customer>>(
+  const { data, isFetching } = useQuery<Paginated<Customer>>(
     ["listCustomers", page, customerType],
     customerQueryFn,
     { keepPreviousData: true }
@@ -59,13 +66,13 @@ const Customers = () => {
   useEffect(() => {
     if (data?.links.next) {
       queryClient.prefetchQuery(
-        ["projects", page[customerType] + 1, customerType],
+        ["listCustomers", page[customerType] + 1, customerType],
         customerQueryFn
       );
     }
     Object.values(CUSTOMER_STATUS).forEach((type) => {
       queryClient.prefetchQuery(
-        ["projects", page[customerType], type],
+        ["listCustomers", page[customerType], type],
         customerQueryFn
       );
     });
@@ -79,23 +86,32 @@ const Customers = () => {
   }, [customerType, data, page]);
 
   return (
-    <Box display="flex" flexDirection="column" height="100%">
-      <Box sx={{ flex: "0 1 auto" }}>
-        <PageHeader
-          title="Customers"
-          actions={headerActions}
-          primaryAction={headerPrimaryAction}
-        />
+    <>
+      {isFetching && !!data ? <LinearProgress /> : <Box height={4} />}
+      <Box
+        {...(isDesktop ? { mt: 6, mr: 9, mb: 4, ml: 6 } : null)}
+        height={`calc( 100% - 48px - 32px - 4px )`}
+        display="flex"
+        flexDirection="column"
+      >
+        <Box sx={{ flex: "0 1 auto" }}>
+          <PageHeader
+            title="Customers"
+            actions={headerActions}
+            primaryAction={headerPrimaryAction}
+          />
+        </Box>
+
+        <Box sx={{ flex: "1 1 auto" }}>
+          <CustomersTable
+            data={data}
+            customerType={customerType}
+            onPageChange={handlePageChange}
+            onTabChange={handleTabChange}
+          />
+        </Box>
       </Box>
-      <Box sx={{ flex: "1 1 auto" }}>
-        <CustomersTable
-          data={data}
-          customerType={customerType}
-          onPageChange={handlePageChange}
-          onTabChange={handleTabChange}
-        />
-      </Box>
-    </Box>
+    </>
   );
 };
 
