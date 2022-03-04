@@ -24,6 +24,12 @@ import Pagination, { PaginationProps } from "./Pagination";
 
 type TableRowProps = MuiTableRowProps & { menuopened?: boolean };
 
+export type CusomterTableProps = {
+  customers: Customer[];
+  paginationProps: PaginationProps;
+  color: string;
+};
+
 const TableCell = styled(MuiTableCell)({
   borderBottom: "none",
 });
@@ -41,11 +47,7 @@ const CustomersDesktopTable = ({
   customers,
   paginationProps,
   color,
-}: {
-  customers: Customer[];
-  paginationProps: PaginationProps;
-  color: string;
-}) => {
+}: CusomterTableProps) => {
   const queryClient = useQueryClient();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
