@@ -151,6 +151,8 @@ const CreateCustomerDialog = ({
                   </InputLabel>
                   <Select
                     labelId="customer-status-select-label"
+                    id="status"
+                    name="status"
                     value={values.status}
                     label="Status"
                     onChange={handleChange}
@@ -162,9 +164,15 @@ const CreateCustomerDialog = ({
                   </Select>
                 </FormControl>
               </DialogContent>
-              <DialogActions>
-                <Button onClick={onClose}>Cancel</Button>
-                <Button type="submit" disabled={isLoading || !isValid}>
+              <DialogActions sx={{ mx: 2, mb: 2 }}>
+                <Button variant="contained" onClick={onClose}>
+                  Cancel
+                </Button>
+                <Button
+                  variant="contained"
+                  type="submit"
+                  disabled={isLoading || !isValid}
+                >
                   Create
                 </Button>
               </DialogActions>
