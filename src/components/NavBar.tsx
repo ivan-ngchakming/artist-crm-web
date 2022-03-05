@@ -114,7 +114,7 @@ const MobileNavBar = ({ value }: NavBarProps) => {
   return (
     <Paper
       sx={{ position: "fixed", bottom: 0, minWidth: "100vw", zIndex: 1000 }}
-      elevation={3}
+      elevation={0}
     >
       <BottomNavigation
         showLabels
