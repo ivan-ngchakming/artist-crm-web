@@ -13,6 +13,7 @@ import CustomersTable from "./CustomerTable";
 import { useDevice } from "../../hooks";
 import PageContainer from "../../components/PageContainer";
 import { palette } from "../../theme";
+import CreateCustomerDialog from "./CreateCustomerDialog";
 
 const Customers = () => {
   const queryClient = useQueryClient();
@@ -22,6 +23,7 @@ const Customers = () => {
     [CUSTOMER_STATUS.ACTIVE]: 1,
     [CUSTOMER_STATUS.COMPLETED]: 1,
   });
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const { isDesktop } = useDevice();
 
   const [customerType, setCustomerType] = useState<CUSTOMER_STATUS>(
@@ -68,7 +70,13 @@ const Customers = () => {
   const headerPrimaryAction = {
     label: "Create",
     isPrimary: true,
-    ButtonProps: { startIcon: <AddIcon /> },
+    ButtonProps: {
+      startIcon: <AddIcon />,
+      onClick: () => setOpenCreateDialog(true),
+    },
+    MenuItemProps: {
+      onClick: () => setOpenCreateDialog(true),
+    },
   };
 
   const headerActions = [
@@ -133,6 +141,10 @@ const Customers = () => {
           />
         </Box>
       </PageContainer>
+      <CreateCustomerDialog
+        open={openCreateDialog}
+        onClose={() => setOpenCreateDialog(false)}
+      />
     </>
   );
 };
