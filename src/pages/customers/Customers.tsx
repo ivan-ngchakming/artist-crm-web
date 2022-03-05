@@ -14,6 +14,7 @@ import { useDevice } from "../../hooks";
 import PageContainer from "../../components/PageContainer";
 import { palette } from "../../theme";
 import CreateCustomerDialog from "./CreateCustomerDialog";
+import EditCustomerDialog from "./EditCustomerDialog";
 
 const Customers = () => {
   const queryClient = useQueryClient();
@@ -24,6 +25,9 @@ const Customers = () => {
     [CUSTOMER_STATUS.COMPLETED]: 1,
   });
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [customerToBeEdited, setCustomerToBeEdited] = useState<Customer | null>(
+    null
+  );
   const { isDesktop } = useDevice();
 
   const [customerType, setCustomerType] = useState<CUSTOMER_STATUS>(
@@ -65,6 +69,10 @@ const Customers = () => {
 
   const handlePageChange = (event: any, newPage: number) => {
     setPage((prev) => ({ ...prev, [customerType]: newPage }));
+  };
+
+  const handleEditCustomer = (customer: Customer) => {
+    setCustomerToBeEdited(customer);
   };
 
   const headerPrimaryAction = {
@@ -138,12 +146,18 @@ const Customers = () => {
             onPageChange={handlePageChange}
             onTabChange={handleTabChange}
             onDelete={deleteCustomer}
+            onEdit={handleEditCustomer}
           />
         </Box>
       </PageContainer>
       <CreateCustomerDialog
         open={openCreateDialog}
         onClose={() => setOpenCreateDialog(false)}
+      />
+      <EditCustomerDialog
+        open={!!customerToBeEdited}
+        customer={customerToBeEdited}
+        onClose={() => setCustomerToBeEdited(null)}
       />
     </>
   );

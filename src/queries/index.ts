@@ -16,3 +16,9 @@ export const createCustomer = async (input: Partial<Customer>) => {
   const { data } = await axios.post(`/customers`, input);
   return data;
 };
+
+export const editCustomer = async (input: Partial<Customer>) => {
+  if (!input.id) throw new Error("ID is required to edit customer");
+  const { data } = await axios.patch(`/customers/${input.id}`, input);
+  return data;
+};

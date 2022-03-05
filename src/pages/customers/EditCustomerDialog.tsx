@@ -13,41 +13,37 @@ import {
 } from "@mui/material";
 import { Formik } from "formik";
 import { useMutation, useQueryClient } from "react-query";
-import { createCustomer } from "../../queries";
-import { Customer, CUSTOMER_STATUS } from "../../types";
+import { editCustomer } from "../../queries";
+import { Customer } from "../../types";
 import customerSchema from "./customerSchema";
 
-const initialValues = {
-  status: CUSTOMER_STATUS.POTENTIAL,
-};
-
-const CreateCustomerDialog = ({
+const EditCustomerDialog = ({
   open,
+  customer,
   onClose,
 }: {
   open?: boolean;
+  customer?: Customer | null;
   onClose: () => void;
 }) => {
   const queryClient = useQueryClient();
-  const { mutate, isLoading } = useMutation(
-    ["createCustomer"],
-    createCustomer,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("listCustomers");
-        onClose();
-      },
-    }
-  );
+  const { mutate, isLoading } = useMutation(["editCustomer"], editCustomer, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("listCustomers");
+      onClose();
+    },
+  });
 
   const handleSubmit = (values: Partial<Customer>) => {
     mutate(values);
   };
 
+  if (!customer) return null;
+
   return (
     <Dialog open={!!open} onClose={onClose}>
       <Formik
-        initialValues={initialValues}
+        initialValues={customer}
         onSubmit={handleSubmit}
         validationSchema={customerSchema}
         validateOnMount
@@ -64,8 +60,22 @@ const CreateCustomerDialog = ({
           return (
             <form onSubmit={handleSubmit}>
               {isLoading && <LinearProgress />}
-              <DialogTitle>Create New Customer</DialogTitle>
+              <DialogTitle>Edit Customer</DialogTitle>
               <DialogContent>
+                <TextField
+                  sx={{ my: 2 }}
+                  fullWidth
+                  id="customerId"
+                  name="id"
+                  label="ID"
+                  value={values.id}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.id && Boolean(errors.id)}
+                  helperText={touched.id && errors.id}
+                  disabled
+                />
+
                 <TextField
                   sx={{ my: 2 }}
                   fullWidth
@@ -159,7 +169,7 @@ const CreateCustomerDialog = ({
                   type="submit"
                   disabled={isLoading || !isValid}
                 >
-                  Create
+                  Update
                 </Button>
               </DialogActions>
             </form>
@@ -170,4 +180,4 @@ const CreateCustomerDialog = ({
   );
 };
 
-export default CreateCustomerDialog;
+export default EditCustomerDialog;
