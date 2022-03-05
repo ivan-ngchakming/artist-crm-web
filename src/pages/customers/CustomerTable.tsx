@@ -31,11 +31,13 @@ const CustomerTable = ({
   customerType,
   onPageChange,
   onDelete,
+  onEdit,
 }: {
   data?: Paginated<Customer>;
   customerType: CUSTOMER_STATUS;
   onPageChange: (event: any, page: number) => void;
   onDelete: (id: number) => void;
+  onEdit: (customer: Customer) => void;
 }) => {
   const { isDesktop } = useDevice();
 
@@ -68,6 +70,7 @@ const CustomerTable = ({
       }}
       color={CUSTOMER_STATUS_COLOR[customerType]}
       onDelete={onDelete}
+      onEdit={onEdit}
     />
   );
 };
@@ -78,12 +81,14 @@ const CustomersTablePage = ({
   onTabChange,
   onPageChange,
   onDelete,
+  onEdit,
 }: {
   data?: Paginated<Customer>;
   customerType: CUSTOMER_STATUS;
   onTabChange: (event: any, newValue: CUSTOMER_STATUS) => void;
   onPageChange: (event: any, page: number) => void;
   onDelete: (id: number) => void;
+  onEdit: (customer: Customer) => void;
 }) => {
   return (
     <Box py={3} height="100%" display="flex" flexDirection="column">
@@ -107,6 +112,7 @@ const CustomersTablePage = ({
           customerType={customerType}
           onPageChange={onPageChange}
           onDelete={onDelete}
+          onEdit={onEdit}
         />
       </Box>
     </Box>

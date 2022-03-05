@@ -27,6 +27,7 @@ export type CusomterTableProps = {
   paginationProps: PaginationProps;
   color: string;
   onDelete: (id: number) => void;
+  onEdit: (customer: Customer) => void;
 };
 
 const TableCell = styled(MuiTableCell)({
@@ -48,6 +49,7 @@ const CustomersDesktopTable = ({
   paginationProps,
   color,
   onDelete,
+  onEdit,
 }: CusomterTableProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -61,6 +63,11 @@ const CustomersDesktopTable = ({
 
   const handleDeleteCustomer = (id: number) => {
     onDelete(id);
+    handleClose();
+  };
+
+  const handleEditCustomer = (customer: Customer) => {
+    onEdit(customer);
     handleClose();
   };
 
@@ -138,6 +145,12 @@ const CustomersDesktopTable = ({
                       transformOrigin={{ horizontal: "right", vertical: "top" }}
                       anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                     >
+                      <MenuItem
+                        dense
+                        onClick={() => handleEditCustomer(customer)}
+                      >
+                        Edit
+                      </MenuItem>
                       <MenuItem dense onClick={() => handleDeleteCustomer(id)}>
                         Delete
                       </MenuItem>

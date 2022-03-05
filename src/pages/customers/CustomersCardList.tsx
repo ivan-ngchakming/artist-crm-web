@@ -19,12 +19,14 @@ const CustomerCard = ({
   onSwipeOpen,
   onSwipeClose,
   onDelete,
+  onEdit,
 }: {
   customer: Customer;
   showActions?: boolean;
   onSwipeOpen?: (id: number) => void;
   onSwipeClose?: (id: number) => void;
   onDelete: (id: number) => void;
+  onEdit: (customer: Customer) => void;
 }) => {
   const { id, email, instagram, status, updatedDate } = customer;
 
@@ -32,6 +34,11 @@ const CustomerCard = ({
     onSwipedLeft: () => onSwipeOpen && onSwipeOpen(id),
     onSwipedRight: () => onSwipeClose && onSwipeClose(id),
   });
+
+  const handleEdit = () => {
+    onEdit(customer);
+    onSwipeClose && onSwipeClose(id);
+  };
 
   return (
     <Card key={id} {...swipeHandlers}>
@@ -71,7 +78,7 @@ const CustomerCard = ({
                 }}
                 variant="contained"
                 color="success"
-                disabled
+                onClick={handleEdit}
               >
                 Edit
               </Button>
@@ -100,11 +107,13 @@ const CustomersCardList = ({
   paginationProps,
   color,
   onDelete,
+  onEdit,
 }: {
   customers: Customer[];
   paginationProps: PaginationProps;
   color: string;
   onDelete: (id: number) => void;
+  onEdit: (customer: Customer) => void;
 }) => {
   const [editingCardId, setEditingCardId] = useState<number | null>(null);
 
@@ -140,6 +149,7 @@ const CustomersCardList = ({
               onSwipeOpen={handleSwipeOpen}
               onSwipeClose={handleSwipeClose}
               onDelete={onDelete}
+              onEdit={onEdit}
             />
           </Box>
         );
