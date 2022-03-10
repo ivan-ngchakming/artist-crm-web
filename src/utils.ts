@@ -1,5 +1,16 @@
+import React from "react";
 import { format, isToday, isYesterday } from "date-fns";
 import { Customer } from "./types";
+
+export const createContext = <T>() => {
+  const Context = React.createContext<T | undefined>(undefined);
+  const useContext = () => {
+    const ctx = React.useContext(Context);
+    if (!ctx) throw new Error("useContext must be inside a provider!");
+    return ctx;
+  };
+  return [useContext, Context] as const;
+};
 
 export const getCustomerFullName = ({
   firstName,
