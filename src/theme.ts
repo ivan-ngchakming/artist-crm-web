@@ -10,6 +10,7 @@ export const palette = {
   INDIAN_RED: "#D16565",
   DARK_PASTEL_GREEN: "#48B15F",
   MERCURY: "#E5E5E5",
+  GREY: "#8D8D8D",
 };
 const theme = createTheme({
   palette: {
@@ -28,6 +29,12 @@ const theme = createTheme({
     },
     h5: {
       fontSize: 24,
+    },
+    h6: {
+      fontSize: 18,
+    },
+    body1: {
+      fontSize: 14,
     },
   },
   components: {

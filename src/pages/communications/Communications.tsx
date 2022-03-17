@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { PageContainer, PageHeader } from "../../components";
 import { MailProvider } from "../../contexts/MailClientContext";
-import MailViwer from "./MailViwer";
+import MailViewer from "./MailViewer";
 
 const Communications = () => {
   return (
@@ -10,8 +10,8 @@ const Communications = () => {
         <Box sx={{ flex: "0 1 auto" }}>
           <PageHeader title="Communications" />
         </Box>
-        <Box sx={{ flex: "1 1 auto" }} mt={5}>
-          <MailViwer />
+        <Box height="75vh" sx={{ flex: "1 1 auto" }} mt={5}>
+          <MailViewer />
         </Box>
       </PageContainer>
     </MailProvider>

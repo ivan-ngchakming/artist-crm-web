@@ -7,17 +7,26 @@ type MailAccount = {
   address: string;
 };
 
-export type Mail = {
-  id: string;
-  flags: string[];
-  date: Date | string; // TODO: investigate if string is needed here
+type MailEnvelope = {
+  date: Date | string; // remove string from type
   subject: string;
   from: MailAccount[];
   sender: MailAccount[];
   replyTo: MailAccount[];
   to: MailAccount[];
-  inReplyTo?: string;
+  inReplyTo: string;
   messageId: string;
+};
+
+export type Mail = {
+  seq: number;
+  emailId: string;
+  uid: number;
+  modseq: string;
+  flags: string[];
+  envelope: MailEnvelope;
+  id: string;
+  bodyPartsDecoded: string[];
 };
 
 type MailContextValue = {
