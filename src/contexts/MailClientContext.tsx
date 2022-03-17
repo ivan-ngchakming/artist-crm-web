@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { createContext } from "../utils";
 import { mockEmails } from "../mocks";
 
-type MailAccount = {
+export type MailAccount = {
   name: string;
   address: string;
 };

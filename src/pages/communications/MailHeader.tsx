@@ -37,7 +37,7 @@ const MailHeader = ({ mail }: { mail: Mail }) => {
         >
           {formatDate(new Date(date))}
         </Typography>
-        <Box>
+        <Box textAlign="end">
           <IconButton>
             <ReplyIcon />
           </IconButton>
