@@ -28,6 +28,9 @@ const LinkRoot = styled(MuiLink, {
     visibility: "visible",
     width: "100%",
   },
+  "&:hover": {
+    cursor: "pointer",
+  },
 }));
 
 const Link = (props: LinkProps) => {
