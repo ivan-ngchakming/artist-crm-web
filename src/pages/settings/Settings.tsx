@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { PageContainer, PageHeader } from "../../components";
+import { useDevice } from "../../hooks";
 import { palette } from "../../theme";
 import EmailSettings from "./EmailSettings";
 
@@ -31,6 +32,7 @@ const TAB_COLOR = {
 };
 
 const Settings = () => {
+  const { isMobile } = useDevice();
   const [tab, setTab] = useState(SETTING_TABS.EMAIL);
 
   const handleChange = (
@@ -56,8 +58,9 @@ const Settings = () => {
           ))}
         </Tabs>
       </Box>
-
-      {tab === SETTING_TABS.EMAIL && <EmailSettings />}
+      <Box mx={isMobile ? 4 : 0}>
+        {tab === SETTING_TABS.EMAIL && <EmailSettings />}
+      </Box>
     </PageContainer>
   );
 };

@@ -1,9 +1,11 @@
-import { Box, Divider, TextField, Typography } from "@mui/material";
+import { Divider, TextField, Typography, Box } from "@mui/material";
 import { useCookies } from "react-cookie";
 import { Link } from "../../components";
+import { useDevice } from "../../hooks";
 import { palette } from "../../theme";
 
 const EmailSettingsForm = () => {
+  const { isMobile } = useDevice();
   const [cookies, setCookie] = useCookies(["emailUser", "emailPass"]);
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,7 +22,7 @@ const EmailSettingsForm = () => {
         id="emailUser"
         label="Email"
         size="small"
-        sx={{ m: 1 }}
+        sx={{ mx: isMobile ? 0 : 1, my: 1 }}
         autoComplete="email"
         value={cookies.emailUser}
         onChange={handleEmailChange}
@@ -29,7 +31,7 @@ const EmailSettingsForm = () => {
         id="emailPass"
         label="Password"
         size="small"
-        sx={{ m: 1 }}
+        sx={{ mx: isMobile ? 0 : 1, my: 1 }}
         type="password"
         autoComplete="on"
         value={cookies.emailPass}
@@ -40,6 +42,7 @@ const EmailSettingsForm = () => {
 };
 
 const EmailSettings = () => {
+  const { isMobile } = useDevice();
   return (
     <>
       <Typography variant="h5" fontWeight={700} sx={{ mb: 1.5 }}>
@@ -51,7 +54,12 @@ const EmailSettings = () => {
       </Typography>
       <Divider />
 
-      <Box display="flex" mt={3} sx={{ color: palette.GREY }}>
+      <Box
+        display="flex"
+        flexDirection={isMobile ? "column" : "row"}
+        mt={3}
+        sx={{ color: palette.GREY }}
+      >
         <Box maxWidth={350}>
           <Typography variant="h6" fontWeight={700} sx={{ mb: 1.5 }}>
             Account
@@ -68,11 +76,11 @@ const EmailSettings = () => {
           </Link>
         </Box>
         <Box
-          ml={6}
           display="flex"
           flexDirection="column"
           justifyContent="center"
-          width={360}
+          ml={isMobile ? 0 : 12}
+          width="100%"
         >
           <EmailSettingsForm />
         </Box>
