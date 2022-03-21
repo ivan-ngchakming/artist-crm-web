@@ -21,6 +21,9 @@ const theme = createTheme({
     secondary: {
       main: palette.BLUE_IVY,
     },
+    info: {
+      main: palette.DENIM_BLUE,
+    },
   },
   typography: {
     fontFamily: "Raleway",
@@ -43,6 +46,15 @@ const theme = createTheme({
         outlined: {
           borderRadius: 32,
           padding: "6px 32px",
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "& .MuiInputLabel-root": {
+            color: palette.GREY,
+          },
         },
       },
     },

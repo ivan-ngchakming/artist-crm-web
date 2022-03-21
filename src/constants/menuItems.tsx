@@ -26,15 +26,15 @@ export const NAV_ITEMS = [
     Icon: MailOutlineIcon,
   },
   {
-    key: "ideas",
-    color: palette.INDIAN_RED,
-    label: "Ideas",
-    Icon: LightbulbOutlinedIcon,
-  },
-  {
     key: "analytics",
     color: palette.DARK_PASTEL_GREEN,
     label: "Analytics",
     Icon: PieChartOutlineOutlinedIcon,
+  },
+  {
+    key: "ideas",
+    color: palette.INDIAN_RED,
+    label: "Ideas",
+    Icon: LightbulbOutlinedIcon,
   },
 ] as NavItem[];
