@@ -25,12 +25,12 @@ const ScrollBarWrapper = styled(Box)({
     width: "12px", // width of the entire scrollbar
   },
   "&::-webkit-scrollbar-track": {
-    background: "orange", // color of the tracking area
+    background: "white", // color of the tracking area
   },
   "&::-webkit-scrollbar-thumb": {
-    backgroundColor: "blue", // color of the scroll thumb
+    backgroundColor: palette.INDIAN_RED, // color of the scroll thumb
     borderRadius: "20px", // roundness of the scroll thumb
-    border: "3px solid orange", // creates padding around scroll thumb
+    border: `3px solid ${"white"}`, // creates padding around scroll thumb
   },
   // Style scroll bar for Firefox
   scrollbarWidth: "thin", // auto or thin
