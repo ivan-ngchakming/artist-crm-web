@@ -1,5 +1,3 @@
-import { ReactNode } from "react";
-import { createContext } from "../utils";
 import { mockEmails } from "../mocks";
 
 export type MailAccount = {
@@ -29,22 +27,18 @@ export type Mail = {
   bodyPartsDecoded: string[];
 };
 
-type MailContextValue = {
-  mails: Mail[];
-  account: MailAccount;
-};
+interface UseMails {
+  (): {
+    mails: Mail[];
+    account: MailAccount;
+  };
+}
 
-const [useMailContext, MailContext] = createContext<MailContextValue>();
-
-export const useMail = () => useMailContext();
-
-export const MailProvider = ({ children }: { children: ReactNode }) => {
-  const value = {
+export const useMails: UseMails = () => {
+  return {
     mails: mockEmails,
     account: { name: "Ivan", address: "ivan.ng.chak.ming@gmail.com" },
   };
-
-  return <MailContext.Provider value={value}>{children}</MailContext.Provider>;
 };
 
-export default MailContext;
+export default useMails;

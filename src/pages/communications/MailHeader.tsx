@@ -2,7 +2,7 @@ import { Box, IconButton, Typography } from "@mui/material";
 import ReplyIcon from "@mui/icons-material/Reply";
 import ReplyAllIcon from "@mui/icons-material/ReplyAll";
 import ForwardIcon from "@mui/icons-material/Forward";
-import { Mail } from "../../contexts/MailClientContext";
+import { Mail } from "../../hooks/useMails";
 import { palette } from "../../theme";
 import { formatDate } from "../../utils";
 

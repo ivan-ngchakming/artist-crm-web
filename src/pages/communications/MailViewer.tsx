@@ -1,4 +1,5 @@
 import { ReactNode, useState } from "react";
+import { useCookies } from "react-cookie";
 import {
   Box,
   Divider,
@@ -8,12 +9,13 @@ import {
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useMail, Mail, MailAccount } from "../../contexts/MailClientContext";
+import { useMails, Mail, MailAccount } from "../../hooks/useMails";
 import { Switch } from "../../components";
 import { palette } from "../../theme";
+import { useDevice } from "../../hooks";
 import MailCard from "./MailCard";
 import MailHeader from "./MailHeader";
-import { useDevice } from "../../hooks";
+import LoginAlert from "./LoginAlert";
 
 const SIDEBAR_WIDTH = 360;
 
@@ -152,9 +154,13 @@ const MailBodyContainer = ({
 
 const MailViewer = () => {
   const { isMobile, isDesktop } = useDevice();
-  const { mails, account } = useMail();
+  const { mails, account } = useMails();
   const [selectedMail, setSelectedMail] = useState<Mail>(mails[0]);
   const [open, setOpen] = useState(false);
+
+  const [cookies] = useCookies(["emailUser", "emailPass"]);
+  const { emailUser, emailPass } = cookies;
+  const validCredentials = !!emailUser && !!emailPass;
 
   const handleSelect = (mail: Mail) => {
     if (isMobile) setOpen(true);
@@ -190,6 +196,8 @@ const MailViewer = () => {
       >
         <MailBody mail={selectedMail} />
       </MailBodyContainer>
+
+      <LoginAlert open={!validCredentials} />
     </Box>
   );
 };
