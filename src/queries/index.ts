@@ -22,3 +22,10 @@ export const editCustomer = async (input: Partial<Customer>) => {
   const { data } = await axios.patch(`/customers/${input.id}`, input);
   return data;
 };
+
+export const listEmails = async () => {
+  const { data } = await axios.get(`/emails?bodyParts=1`, {
+    withCredentials: true,
+  });
+  return data;
+};

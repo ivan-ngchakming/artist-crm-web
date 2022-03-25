@@ -1,5 +1,4 @@
 import { ReactNode, useState } from "react";
-import { useCookies } from "react-cookie";
 import {
   Box,
   Divider,
@@ -154,13 +153,9 @@ const MailBodyContainer = ({
 
 const MailViewer = () => {
   const { isMobile, isDesktop } = useDevice();
-  const { mails, account } = useMails();
+  const { mails, account, validCredentials, isLoading } = useMails();
   const [selectedMail, setSelectedMail] = useState<Mail>(mails[0]);
   const [open, setOpen] = useState(false);
-
-  const [cookies] = useCookies(["emailUser", "emailPass"]);
-  const { emailUser, emailPass } = cookies;
-  const validCredentials = !!emailUser && !!emailPass;
 
   const handleSelect = (mail: Mail) => {
     if (isMobile) setOpen(true);
@@ -194,7 +189,7 @@ const MailViewer = () => {
         onClose={handleClose}
         isDesktop={isDesktop}
       >
-        <MailBody mail={selectedMail} />
+        {!isLoading && <MailBody mail={selectedMail} />}
       </MailBodyContainer>
 
       <LoginAlert open={!validCredentials} />
