@@ -6,7 +6,10 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useNavigate } from "react-router-dom";
 
-const LoginAlert = ({ open, ...others }: DialogProps) => {
+export const LoginAlertMissingCredentials = ({
+  open,
+  ...others
+}: DialogProps) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -42,4 +45,34 @@ const LoginAlert = ({ open, ...others }: DialogProps) => {
   );
 };
 
-export default LoginAlert;
+export const LoginAlertUnauthorized = ({ open, ...others }: DialogProps) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/settings?tab=email");
+  };
+
+  return (
+    <Dialog
+      open={open}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      {...others}
+    >
+      <DialogTitle id="alert-dialog-title">
+        Invalid email address or password
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description" sx={{ mb: 4 }}>
+          Please check your email address and password.
+        </DialogContentText>
+
+        <DialogActions>
+          <Button variant="contained" onClick={handleClick} autoFocus>
+            Go to settings
+          </Button>
+        </DialogActions>
+      </DialogContent>
+    </Dialog>
+  );
+};

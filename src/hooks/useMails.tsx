@@ -1,6 +1,5 @@
 import { useCookies } from "react-cookie";
-import { useQuery } from "react-query";
-import { mockEmails } from "../mocks";
+import { useQuery, UseQueryResult } from "react-query";
 import { listEmails } from "../queries";
 
 export type MailAccount = {
@@ -32,11 +31,10 @@ export type Mail = {
 
 interface UseMails {
   (): {
-    isLoading: boolean;
     validCredentials: boolean;
     mails: Mail[];
     account: MailAccount;
-  };
+  } & Partial<UseQueryResult>;
 }
 
 export const useMails: UseMails = () => {
@@ -44,12 +42,12 @@ export const useMails: UseMails = () => {
   const { emailUser, emailPass } = cookies;
   const validCredentials = !!emailUser && !!emailPass;
 
-  const { data, isLoading } = useQuery<Mail[]>(["listEmails"], () =>
+  const { data, ...restResult } = useQuery<Mail[]>(["listEmails"], () =>
     listEmails()
   );
 
   return {
-    isLoading,
+    ...restResult,
     validCredentials,
     mails: data || ([] as Mail[]),
     account: { name: "Ivan", address: emailUser },
