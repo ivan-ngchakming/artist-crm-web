@@ -6,7 +6,7 @@ import {
   styled,
   CardActionArea,
 } from "@mui/material";
-import { Mail } from "../../contexts/MailClientContext";
+import { Mail } from "../../hooks/useMails";
 import { palette } from "../../theme";
 import { formatDate } from "../../utils";
 
